@@ -1,7 +1,7 @@
 accessWidener	v1	named
 # Banner
 
-# 1.20.2
+# 1.20.3
 accessible field net/minecraft/server/network/ServerCommonPacketListenerImpl connection Lnet/minecraft/network/Connection;
 accessible field net/minecraft/server/ServerAdvancementManager advancements Ljava/util/Map;
 accessible method net/minecraft/world/level/block/entity/SkullBlockEntity fillProfileTextures (Lcom/mojang/authlib/GameProfile;)Ljava/util/concurrent/CompletableFuture;

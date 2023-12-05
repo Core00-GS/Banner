@@ -165,7 +165,7 @@ public abstract class MixinPlayerList implements InjectionPlayerList {
         this.players = new CopyOnWriteArrayList<>();
         minecraftServer.banner$setServer(this.cserver =
                 new CraftServer((DedicatedServer) minecraftServer, ((PlayerList) (Object) this)));
-        BannerServer.LOGGER.info(BannerMCStart.I18N.get("registry.begin"));
+        BannerServer.LOGGER.info(BannerMCStart.I18N.as("registry.begin"));
         BukkitRegistry.registerAll((DedicatedServer) minecraftServer);
         minecraftServer.banner$setConsole(ColouredConsoleSender.getInstance());
     }

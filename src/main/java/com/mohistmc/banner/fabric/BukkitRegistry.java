@@ -118,7 +118,7 @@ public class BukkitRegistry {
                 BannerServer.LOGGER.debug("Save-ITEM: " + material.name() + " - " + material.key);
             }
         }
-        BannerServer.LOGGER.info(BannerMCStart.I18N.get("registry.item"), newTypes.size());
+        BannerServer.LOGGER.info(BannerMCStart.I18N.as("registry.item"), newTypes.size());
     }
 
     public static void loadBlocks() {
@@ -142,7 +142,7 @@ public class BukkitRegistry {
                 }
             }
         }
-        BannerServer.LOGGER.info(BannerMCStart.I18N.get("registry.block"), newTypes.size());
+        BannerServer.LOGGER.info(BannerMCStart.I18N.as("registry.block"), newTypes.size());
     }
 
     private static void loadFluids() {
@@ -302,7 +302,7 @@ public class BukkitRegistry {
             }
         }
         DynamicEnumHelper.addEnums(Biome.class, newTypes);
-        BannerServer.LOGGER.info(BannerMCStart.I18N.get("registry.biome"), newTypes.size());
+        BannerServer.LOGGER.info(BannerMCStart.I18N.as("registry.biome"), newTypes.size());
     }
 
     private static void loadVillagerProfessions() {
@@ -330,7 +330,7 @@ public class BukkitRegistry {
             }
         }
         DynamicEnumHelper.addEnums(Villager.Profession.class, newTypes);
-        BannerServer.LOGGER.info(BannerMCStart.I18N.get("registry.villager-profession"), newTypes.size());
+        BannerServer.LOGGER.info(BannerMCStart.I18N.as("registry.villager-profession"), newTypes.size());
     }
 
     public static void registerEnvironments(Registry<LevelStem> registry) {
@@ -350,7 +350,7 @@ public class BukkitRegistry {
             }
         }
         DynamicEnumHelper.addEnums(World.Environment.class, newTypes);
-        BannerServer.LOGGER.info(BannerMCStart.I18N.get("registry.environment"), newTypes.size());
+        BannerServer.LOGGER.info(BannerMCStart.I18N.as("registry.environment"), newTypes.size());
     }
 
     private static void loadEntities() {
@@ -378,7 +378,7 @@ public class BukkitRegistry {
             }
         }
         DynamicEnumHelper.addEnums(EntityType.class, values);
-        BannerServer.LOGGER.info(BannerMCStart.I18N.get("registry.entity-type"), values.size());
+        BannerServer.LOGGER.info(BannerMCStart.I18N.as("registry.entity-type"), values.size());
     }
 
     private static void loadEnchantments() {
@@ -397,7 +397,7 @@ public class BukkitRegistry {
             }
         }
         Enchantment.stopAcceptingRegistrations();
-        BannerServer.LOGGER.info(BannerMCStart.I18N.get("registry.enchantment"), size - origin);
+        BannerServer.LOGGER.info(BannerMCStart.I18N.as("registry.enchantment"), size - origin);
     }
 
     private static void loadPotions() {
@@ -421,7 +421,7 @@ public class BukkitRegistry {
             }
         }
         PotionEffectType.stopAcceptingRegistrations();
-        BannerServer.LOGGER.info(BannerMCStart.I18N.get("registry.potion"), size - origin);
+        BannerServer.LOGGER.info(BannerMCStart.I18N.as("registry.potion"), size - origin);
         int typeId = PotionType.values().length;
         List<PotionType> newTypes = new ArrayList<>();
         BiMap<PotionType, String> map = HashBiMap.create(Unsafe.getStatic(CraftPotionUtil.class, "regular"));

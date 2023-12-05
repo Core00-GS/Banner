@@ -609,7 +609,7 @@ public abstract class MixinMinecraftServer extends ReentrantBlockableEventLoop<T
         this.forceTicks = true;
         // CraftBukkit end
 
-        LOGGER.info(BannerMCStart.I18N.get("server.region.prepare"), worldserver.dimension().location());
+        LOGGER.info(BannerMCStart.I18N.as("server.region.prepare"), worldserver.dimension().location());
         BlockPos blockposition = worldserver.getSharedSpawnPos();
 
         listener.updateSpawnPos(new ChunkPos(blockposition));
@@ -674,7 +674,7 @@ public abstract class MixinMinecraftServer extends ReentrantBlockableEventLoop<T
         this.forceTicks = true;
         // CraftBukkit end
 
-        LOGGER.info(BannerMCStart.I18N.get("server.region.prepare"), worldserver.dimension().location());
+        LOGGER.info(BannerMCStart.I18N.as("server.region.prepare"), worldserver.dimension().location());
         BlockPos blockposition = worldserver.getSharedSpawnPos();
 
         listener.updateSpawnPos(new ChunkPos(blockposition));

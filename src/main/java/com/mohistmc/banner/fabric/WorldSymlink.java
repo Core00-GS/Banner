@@ -19,13 +19,13 @@ public class WorldSymlink {
         try {
             if (!Files.isSymbolicLink(source)) {
                 if (Files.exists(source)) {
-                    BannerServer.LOGGER.warn(BannerMCStart.I18N.get("symlink-file-exist"), source);
+                    BannerServer.LOGGER.warn(BannerMCStart.I18N.as("symlink-file-exist"), source);
                     return;
                 }
                 Files.createSymbolicLink(source, dest);
             }
         } catch (UnsupportedOperationException e) {
-            BannerServer.LOGGER.warn(BannerMCStart.I18N.get("error-symlink"), e);
+            BannerServer.LOGGER.warn(BannerMCStart.I18N.as("error-symlink"), e);
         } catch (IOException e) {
             BannerServer.LOGGER.error("Error creating symlink", e);
         }

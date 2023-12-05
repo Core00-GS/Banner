@@ -8,7 +8,7 @@ import net.minecraft.data.worldgen.features.TreeFeatures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -19,15 +19,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(AbstractTreeGrower.class)
+@Mixin(TreeGrower.class)
 public class MixinAbstractTreeGrower implements InjectionAbstractTreeGrower {
 
     @Inject(method = "growTree", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/core/Holder;value()Ljava/lang/Object;"),
             locals = LocalCapture.CAPTURE_FAILHARD)
-    private void banner$setTreeType(ServerLevel level, ChunkGenerator generator, BlockPos pos, BlockState state,
-                                    RandomSource random, CallbackInfoReturnable<Boolean> cir, ResourceKey resourceKey,
-                                    Holder<ConfiguredFeature<?, ?>> holder) {
+    private void banner$setTreeType(ServerLevel serverLevel, ChunkGenerator chunkGenerator, BlockPos blockPos, BlockState blockState, RandomSource randomSource, CallbackInfoReturnable<Boolean> cir, ResourceKey resourceKey) {
         this.setTreeType(holder);
     }
 

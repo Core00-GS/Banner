@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.3-SNAPSHOT'
+	id 'fabric-loom' version '1.4-SNAPSHOT'
 	id 'maven-publish'
 	id 'org.ajoberstar.grgit' version '5.2.0'
 }
@@ -49,7 +49,7 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings loom.layered() {
 		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-1.20.1:2023.06.26@zip")
+		//parchment("org.parchmentmc.data:parchment-1.20.2:2023.10.22@zip")
 	}
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
@@ -79,7 +79,7 @@ dependencies {
 	implementation "org.apache.maven:maven-model-builder:3.8.5"
 	implementation "org.apache.maven:maven-repository-metadata:3.8.5"
 	compileOnly "org.jetbrains:annotations:21.0.1"
-	implementation(include("com.mohistmc:i18n:0.4"))
+	implementation(include("com.mohistmc:i18n:0.5"))
 
 	// craftbukkit
 	implementation "org.fusesource.jansi:jansi:1.18"
@@ -150,7 +150,7 @@ dependencies {
 loom {
 	accessWidenerPath = file("src/main/resources/banner.accesswidener")
 	log4jConfigs.from(file("src/main/resources/log4j2_banner.xml"))
-	serverOnlyMinecraftJar()
+	//serverOnlyMinecraftJar()
 }
 
 processResources {
@@ -207,7 +207,7 @@ publishing {
 import groovy.json.JsonSlurper
 static String ci_version() {
 	try {
-		def conn = new URL("https://ci.codemc.io/job/MohistMC/job/Banner-1.20.2/api/json").openConnection()
+		def conn = new URL("https://ci.codemc.io/job/MohistMC/job/Banner-1.20.3/api/json").openConnection()
 		conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36")
 		conn.connect()
 		def root = conn.content.text
@@ -217,6 +217,6 @@ static String ci_version() {
 		def number = data.substring(data.indexOf("number")).split(",")
 		return Integer.valueOf(number[0].replace("number=", "")).intValue()
 	} catch (Exception ignored) {
-		return "1.20.2"
+		return "1.20.3"
 	}
 }
