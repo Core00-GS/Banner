@@ -12,12 +12,17 @@ import com.mohistmc.banner.api.ServerAPI;
 import com.mohistmc.banner.bukkit.BukkitExtraConstants;
 import com.mohistmc.banner.bukkit.nms.utils.RemapUtils;
 import com.mohistmc.banner.plugins.BannerPlugin;
+import com.mohistmc.org.yaml.snakeyaml.LoaderOptions;
+import com.mohistmc.org.yaml.snakeyaml.Yaml;
+import com.mohistmc.org.yaml.snakeyaml.constructor.SafeConstructor;
+import com.mohistmc.org.yaml.snakeyaml.error.MarkedYAMLException;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Lifecycle;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -55,10 +60,13 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.NbtException;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.ReportedNbtException;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
@@ -110,6 +118,7 @@ import net.minecraft.world.level.levelgen.WorldDimensions;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.storage.LevelDataAndDimensions;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.PlayerDataStorage;
 import net.minecraft.world.level.storage.PrimaryLevelData;
@@ -166,6 +175,7 @@ import org.bukkit.craftbukkit.v1_20_R3.help.SimpleHelpMap;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftBlastingRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftCampfireRecipe;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftFurnaceRecipe;
+import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemCraftResult;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemFactory;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftMerchantCustom;
@@ -223,6 +233,7 @@ import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemCraftResult;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.Recipe;
@@ -256,10 +267,6 @@ import org.bukkit.util.StringUtil;
 import org.bukkit.util.permissions.DefaultPermissions;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.SpigotConfig;
-import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.SafeConstructor;
-import org.yaml.snakeyaml.error.MarkedYAMLException;
 
 public final class CraftServer implements Server {
     private final String serverName = "Banner";
@@ -321,11 +328,7 @@ public final class CraftServer implements Server {
 
         CraftRegistry.setMinecraftRegistry(console.registryAccess());
 
-        // Register all the Enchantments and PotionTypes now so we can stop new registration immediately after
-        Enchantments.SHARPNESS.getClass();
-
         Potion.setPotionBrewer(new CraftPotionBrewer());
-        MobEffects.BLINDNESS.getClass();
         // Ugly hack :(
 
         if (!Main.useConsole) {
@@ -1085,17 +1088,47 @@ public final class CraftServer implements Server {
             throw new RuntimeException(ex);
         }
 
+        Dynamic<?> dynamic;
+        if (worldSession.hasWorldData()) {
+            net.minecraft.world.level.storage.WorldInfo worldinfo;
+            try {
+                dynamic = worldSession.getDataTag();
+                worldinfo = worldSession.getSummary(dynamic);
+            } catch (NbtException | ReportedNbtException | IOException ioexception) {
+                Convertable.b convertable_b = worldSession.getLevelDirectory();
+                MinecraftServer.LOGGER.warn("Failed to load world data from {}", convertable_b.dataFile(), ioexception);
+                MinecraftServer.LOGGER.info("Attempting to use fallback");
+                try {
+                    dynamic = worldSession.getDataTagFallback();
+                    worldinfo = worldSession.getSummary(dynamic);
+                } catch (NbtException | ReportedNbtException | IOException ioexception1) {
+                    MinecraftServer.LOGGER.error("Failed to load world data from {}", convertable_b.oldDataFile(), ioexception1);
+                    MinecraftServer.LOGGER.error("Failed to load world data from {} and {}. World files may be corrupted. Shutting down.", convertable_b.dataFile(), convertable_b.oldDataFile());
+                    return null;
+                }
+                worldSession.restoreLevelDataFromOld();
+            }
+            if (worldinfo.requiresManualConversion()) {
+                MinecraftServer.LOGGER.info("This world must be opened in an older version (like 1.6.4) to be safely converted");
+                return null;
+            }
+            if (!worldinfo.isCompatible()) {
+                MinecraftServer.LOGGER.info("This world was created by an incompatible version.");
+                return null;
+            }
+        } else {
+            dynamic = null;
+        }
+
         boolean hardcore = creator.hardcore();
 
         PrimaryLevelData worlddata;
         WorldLoader.DataLoadContext worldloader_a = console.bridge$worldLoader();
         Registry<LevelStem> iregistry = worldloader_a.datapackDimensions().registryOrThrow(Registries.LEVEL_STEM);
-        DynamicOps<Tag> dynamicops = RegistryOps.create(NbtOps.INSTANCE, (HolderLookup.Provider) worldloader_a.datapackWorldgen());
-        Pair<WorldData, WorldDimensions.Complete> pair = worldSession.getDataTag(dynamicops, worldloader_a.dataConfiguration(), iregistry, worldloader_a.datapackWorldgen().allRegistriesLifecycle());
-
-        if (pair != null) {
-            worlddata = (PrimaryLevelData) pair.getFirst();
-            iregistry = pair.getSecond().dimensions();
+        if (dynamic != null) {
+            LevelDataAndDimensions leveldataanddimensions = Convertable.getLevelDataAndDimensions(dynamic, worldloader_a.dataConfiguration(), iregistry, worldloader_a.datapackWorldgen());
+            worlddata = (WorldDataServer) leveldataanddimensions.worldData();
+            iregistry = leveldataanddimensions.dimensions().dimensions();
         } else {
             LevelSettings worldsettings;
             WorldOptions worldoptions = new WorldOptions(creator.seed(), creator.generateStructures(), false);

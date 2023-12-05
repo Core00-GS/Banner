@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.authlib.yggdrasil.ProfileResult;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -137,14 +138,9 @@ public final class CraftPlayerProfile implements PlayerProfile {
 
         // Look up properties such as the textures:
         if (!profile.getId().equals(Util.NIL_UUID)) {
-            GameProfile newProfile;
-            try {
-                newProfile = SkullBlockEntity.fillProfileTextures(profile).get().orElse(null); // TODO: replace with CompletableFuture
-            } catch (InterruptedException | ExecutionException ex) {
-                throw new RuntimeException("Exception filling profile textures", ex);
-            }
+            ProfileResult newProfile = server.getSessionService().fetchProfile(profile.getId(), true);
             if (newProfile != null) {
-                profile = newProfile;
+                profile = newProfile.profile();
             }
         }
 

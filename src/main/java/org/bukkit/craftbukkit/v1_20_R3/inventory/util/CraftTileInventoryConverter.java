@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraft.world.level.block.entity.CrafterBlockEntity;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.entity.DropperBlockEntity;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
@@ -133,6 +134,13 @@ public abstract class CraftTileInventoryConverter implements CraftInventoryCreat
         @Override
         public Container getTileEntity() {
             return new SmokerBlockEntity(BlockPos.ZERO, Blocks.SMOKER.defaultBlockState());
+        }
+    }
+
+    public static class Crafter extends CraftTileInventoryConverter {
+        @Override
+        public Container getTileEntity() {
+            return new CrafterBlockEntity(BlockPos.ZERO, Blocks.CRAFTER.defaultBlockState());
         }
     }
 }

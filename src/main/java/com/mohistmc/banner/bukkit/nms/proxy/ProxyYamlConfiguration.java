@@ -1,7 +1,7 @@
 package com.mohistmc.banner.bukkit.nms.proxy;
 
+import com.mohistmc.org.yaml.snakeyaml.reader.ReaderException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.yaml.snakeyaml.reader.ReaderException;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

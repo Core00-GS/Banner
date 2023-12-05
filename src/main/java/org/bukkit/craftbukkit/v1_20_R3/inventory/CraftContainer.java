@@ -8,6 +8,7 @@ import net.minecraft.world.inventory.BlastFurnaceMenu;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.inventory.CartographyTableMenu;
 import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.CrafterMenu;
 import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.inventory.DispenserMenu;
 import net.minecraft.world.inventory.EnchantmentMenu;
@@ -156,6 +157,8 @@ public class CraftContainer extends AbstractContainerMenu {
             case CRAFTING:
             case MERCHANT:
                 throw new IllegalArgumentException("Can't open a " + inventory.getType() + " inventory!");
+            case CRAFTER:
+                return MenuType.CRAFTER_3x3;
             default:
                 // TODO: If it reaches the default case, should we throw an error?
                 return MenuType.GENERIC_9x3;
@@ -206,7 +209,7 @@ public class CraftContainer extends AbstractContainerMenu {
                 delegate = new BlastFurnaceMenu(windowId, bottom, top, new SimpleContainerData(4));
                 break;
             case LECTERN:
-                delegate = new LecternMenu(windowId, top, new SimpleContainerData(1), bottom);
+                delegate = new LecternMenu(windowId);
                 break;
             case SMOKER:
                 delegate = new SmokerMenu(windowId, bottom, top, new SimpleContainerData(4));
@@ -229,6 +232,9 @@ public class CraftContainer extends AbstractContainerMenu {
             case SMITHING:
             case SMITHING_NEW:
                 setupSmithing(top, bottom); // SPIGOT-6783 - manually set up slots so we can use the delegated inventory and not the automatically created one
+                break;
+            case CRAFTER:
+                delegate = new CrafterMenu(windowId, bottom);
                 break;
         }
 

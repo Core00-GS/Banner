@@ -489,6 +489,8 @@ public class CraftBlockData implements BlockData {
         register(net.minecraft.world.level.block.CeilingHangingSignBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftCeilingHangingSign::new);
         register(net.minecraft.world.level.block.CherryLeavesBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftCherryLeaves::new);
         register(net.minecraft.world.level.block.ChiseledBookShelfBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftChiseledBookShelf::new);
+        register(net.minecraft.world.level.block.CopperBulbBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftCopperBulb::new);
+        register(net.minecraft.world.level.block.CrafterBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftCrafter::new);
         register(net.minecraft.world.level.block.DecoratedPotBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftDecoratedPot::new);
         register(net.minecraft.world.level.block.EquipableCarvedPumpkinBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftEquipableCarvedPumpkin::new);
         register(net.minecraft.world.level.block.GlowLichenBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftGlowLichen::new);
@@ -504,7 +506,6 @@ public class CraftBlockData implements BlockData {
         register(net.minecraft.world.level.block.PinkPetalsBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftPinkPetals::new);
         register(net.minecraft.world.level.block.PitcherCropBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftPitcherCrop::new);
         register(net.minecraft.world.level.block.PointedDripstoneBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftPointedDripstone::new);
-        register(net.minecraft.world.level.block.PowderSnowCauldronBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftPowderSnowCauldron::new);
         register(net.minecraft.world.level.block.SculkCatalystBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftSculkCatalyst::new);
         register(net.minecraft.world.level.block.SculkSensorBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftSculkSensor::new);
         register(net.minecraft.world.level.block.SculkShriekerBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftSculkShrieker::new);
@@ -513,9 +514,15 @@ public class CraftBlockData implements BlockData {
         register(net.minecraft.world.level.block.SnifferEggBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftSnifferEgg::new);
         register(net.minecraft.world.level.block.TallSeagrassBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftTallSeagrass::new);
         register(net.minecraft.world.level.block.TorchflowerCropBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftTorchflowerCrop::new);
+        register(net.minecraft.world.level.block.TrialSpawnerBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftTrialSpawner::new);
         register(net.minecraft.world.level.block.WallHangingSignBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftWallHangingSign::new);
+        register(net.minecraft.world.level.block.WaterloggedTransparentBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftWaterloggedTransparent::new);
+        register(net.minecraft.world.level.block.WeatheringCopperBulbBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftWeatheringCopperBulb::new);
+        register(net.minecraft.world.level.block.WeatheringCopperDoorBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftWeatheringCopperDoor::new);
+        register(net.minecraft.world.level.block.WeatheringCopperGrateBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftWeatheringCopperGrate::new);
         register(net.minecraft.world.level.block.WeatheringCopperSlabBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftWeatheringCopperSlab::new);
         register(net.minecraft.world.level.block.WeatheringCopperStairBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftWeatheringCopperStair::new);
+        register(net.minecraft.world.level.block.WeatheringCopperTrapDoorBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftWeatheringCopperTrapDoor::new);
         register(net.minecraft.world.level.block.piston.PistonBaseBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftPiston::new);
         register(net.minecraft.world.level.block.piston.PistonHeadBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftPistonExtension::new);
         register(net.minecraft.world.level.block.piston.MovingPistonBlock.class, org.bukkit.craftbukkit.v1_20_R3.block.impl.CraftPistonMoving::new);

@@ -12,6 +12,7 @@ import com.mohistmc.banner.bukkit.entity.MohistModsMinecart;
 import com.mohistmc.banner.bukkit.entity.MohistModsMinecartContainer;
 import com.mohistmc.banner.bukkit.entity.MohistModsSkeleton;
 import com.mohistmc.banner.bukkit.entity.MohistModsTameableEntity;
+import com.mohistmc.banner.bukkit.entity.MohistModsThrowableEntity;
 import com.mohistmc.banner.bukkit.entity.MohistModsThrowableProjectile;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerPlayerConnection;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -51,6 +53,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.SpellcasterIllager;
 import net.minecraft.world.entity.monster.Strider;
+import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.monster.piglin.PiglinBrute;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -58,6 +61,7 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.WindCharge;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.AbstractMinecartContainer;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -81,6 +85,7 @@ import org.bukkit.craftbukkit.v1_20_R3.util.CraftChatMessage;
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftLocation;
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftSpawnCategory;
 import org.bukkit.craftbukkit.v1_20_R3.util.CraftVector;
+import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
@@ -238,6 +243,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
                     else if (entity instanceof net.minecraft.world.entity.monster.Zoglin) { return new CraftZoglin(server, (net.minecraft.world.entity.monster.Zoglin) entity); }
 
                     else if (entity instanceof Warden) { return new CraftWarden(server, (Warden) entity); }
+                    else if (entity instanceof Breeze) { return new CraftBreeze(server, (Breeze) entity); }
 
                     else  { return new CraftMonster(server, (net.minecraft.world.entity.monster.Monster) entity); }
                 }
@@ -307,6 +313,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
             else if (entity instanceof net.minecraft.world.entity.projectile.LargeFireball) { return new CraftLargeFireball(server, (net.minecraft.world.entity.projectile.LargeFireball) entity); }
             else if (entity instanceof net.minecraft.world.entity.projectile.WitherSkull) { return new CraftWitherSkull(server, (net.minecraft.world.entity.projectile.WitherSkull) entity); }
             else if (entity instanceof net.minecraft.world.entity.projectile.DragonFireball) { return new CraftDragonFireball(server, (net.minecraft.world.entity.projectile.DragonFireball) entity); }
+            else if (entity instanceof WindCharge) { return new CraftWindCharge(server, (WindCharge) entity); }
             else { return new CraftFireball(server, (net.minecraft.world.entity.projectile.AbstractHurtingProjectile) entity); }
         }
         else if (entity instanceof net.minecraft.world.entity.projectile.EyeOfEnder) { return new CraftEnderSignal(server, (net.minecraft.world.entity.projectile.EyeOfEnder) entity); }
