@@ -11,7 +11,7 @@ import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerStatusPacketListenerImpl;
-import org.bukkit.craftbukkit.v1_20_R2.util.CraftChatMessage;
+import org.bukkit.craftbukkit.v1_20_R3.util.CraftChatMessage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;

@@ -1,16 +1,15 @@
 package org.bukkit;
 
-import org.jetbrains.annotations.ApiStatus;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Indicates that the annotated element (class, method, field, etc.) is part of a
- * <a href="https://minecraft.fandom.com/wiki/Experimental_Gameplay">minecraft experimental feature</a>
+ * <a href="https://minecraft.wiki/w/Experimental_Gameplay">minecraft experimental feature</a>
  * and is subject to changes by Mojang.
  * <p>
  * <b>Note:</b> Elements marked with this annotation require the use of a datapack or otherwise

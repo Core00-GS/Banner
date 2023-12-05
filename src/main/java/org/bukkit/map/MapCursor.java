@@ -252,7 +252,15 @@ public final class MapCursor {
         BANNER_GREEN(23),
         BANNER_RED(24),
         BANNER_BLACK(25),
-        RED_X(26);
+        RED_X(26),
+        DESERT_VILLAGE(27),
+        PLAINS_VILLAGE(28),
+        SAVANNA_VILLAGE(29),
+        SNOWY_VILLAGE(30),
+        TAIGA_VILLAGE(31),
+        JUNGLE_TEMPLE(32),
+        SWAMP_HUT(33),
+        ;
 
         private byte value;
 

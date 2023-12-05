@@ -1,13 +1,13 @@
 package org.bukkit.inventory.meta;
 
+import java.util.List;
 import org.bukkit.Color;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * Represents a potion or item that can have custom effects.
@@ -28,6 +28,21 @@ public interface PotionMeta extends ItemMeta {
      */
     @NotNull
     PotionData getBasePotionData();
+
+    /**
+     * Sets the underlying potion type
+     *
+     * @param type PotionType to set the base potion state to
+     */
+    void setBasePotionType(@NotNull PotionType type);
+
+    /**
+     * Returns the potion type about the base potion
+     *
+     * @return a PotionType object
+     */
+    @NotNull
+    PotionType getBasePotionType();
 
     /**
      * Checks for the presence of custom potion effects.

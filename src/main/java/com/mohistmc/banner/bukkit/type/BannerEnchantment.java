@@ -1,7 +1,7 @@
 package com.mohistmc.banner.bukkit.type;
 
 import net.minecraft.world.item.enchantment.Enchantment;
-import org.bukkit.craftbukkit.v1_20_R2.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
 import org.jetbrains.annotations.NotNull;
 
 public class BannerEnchantment extends CraftEnchantment {

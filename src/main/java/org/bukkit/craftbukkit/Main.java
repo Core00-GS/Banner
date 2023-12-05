@@ -1,18 +1,16 @@
 package org.bukkit.craftbukkit;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import static java.util.Arrays.asList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.util.PathConverter;
 import net.minecrell.terminalconsole.TerminalConsoleAppender;
-import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static java.util.Arrays.asList;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
 
 public class Main extends OptionParser {
 
@@ -43,6 +41,7 @@ public class Main extends OptionParser {
         acceptsAll(asList("W", "world-dir", "universe", "world-container"), "World container")
                 .withRequiredArg()
                 .ofType(File.class)
+                .defaultsTo(new File("."))
                 .describedAs("Directory containing worlds");
 
         acceptsAll(asList("w", "world", "level-name"), "World name")

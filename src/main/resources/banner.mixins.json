@@ -514,7 +514,7 @@
     "world.level.block.entity.MixinSignBlockEntity",
     "world.level.block.entity.MixinTheEndGatewayBlockEntity",
     "world.level.block.grower.MixinAbstractMegaTreeGrower",
-    "world.level.block.grower.MixinAbstractTreeGrower",
+    "world.level.block.grower.MixinTreeGrower",
     "world.level.border.MixinWorldBorder",
     "world.level.border.MixinWorldBorder_MovingBorderExtent",
     "world.level.chunk.MixinChunkAccess",

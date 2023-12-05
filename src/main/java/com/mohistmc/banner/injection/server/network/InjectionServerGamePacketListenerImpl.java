@@ -3,7 +3,6 @@ package com.mohistmc.banner.injection.server.network;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.world.entity.RelativeMovement;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.slf4j.Logger;
 

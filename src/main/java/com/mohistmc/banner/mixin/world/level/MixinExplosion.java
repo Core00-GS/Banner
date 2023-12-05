@@ -17,7 +17,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.boss.EnderDragonPart;
@@ -41,7 +40,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R2.event.CraftEventFactory;
+import org.bukkit.craftbukkit.v1_20_R3.event.CraftEventFactory;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.TNTPrimeEvent;
@@ -67,11 +66,9 @@ public abstract class MixinExplosion implements InjectionExplosion {
     @Shadow @Final private double y;
     @Shadow @Final private double z;
     @Shadow @Final public Entity source;
-    @Shadow public abstract DamageSource getDamageSource();
     @Shadow @Final private Map<Player, Vec3> hitPlayers;
     @Shadow @Final private boolean fire;
     @Shadow @Final private RandomSource random;
-    @Shadow private static void addBlockDrops(ObjectArrayList<Pair<ItemStack, BlockPos>> dropPositionArray, ItemStack stack, BlockPos pos) { }
     @Shadow @Final private ExplosionDamageCalculator damageCalculator;
     @Shadow public abstract boolean interactsWithBlocks();
     @Shadow @Nullable public abstract LivingEntity getIndirectSourceEntity();

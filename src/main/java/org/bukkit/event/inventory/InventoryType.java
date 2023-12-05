@@ -143,6 +143,12 @@ public enum InventoryType {
      */
     JUKEBOX(1, "Jukebox", false),
     /**
+     * A crafter inventory, with 9 CRAFTING slots.
+     */
+    @MinecraftExperimental
+    @ApiStatus.Experimental
+    CRAFTER(9, "Crafter"),
+    /**
      * The new smithing inventory, with 3 CRAFTING slots and 1 RESULT slot.
      *
      * @deprecated use {@link #SMITHING}

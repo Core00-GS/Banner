@@ -18,7 +18,7 @@ public interface Objective {
      * @throws IllegalStateException if this objective has been unregistered
      */
     @NotNull
-    String getName();
+    String getName() throws IllegalStateException;
 
     /**
      * Gets the name displayed to players for this objective
@@ -27,15 +27,18 @@ public interface Objective {
      * @throws IllegalStateException if this objective has been unregistered
      */
     @NotNull
-    String getDisplayName();
+    String getDisplayName() throws IllegalStateException;
 
     /**
      * Sets the name displayed to players for this objective.
      *
      * @param displayName Display name to set
      * @throws IllegalStateException if this objective has been unregistered
+     * @throws IllegalArgumentException if displayName is null
+     * @throws IllegalArgumentException if displayName is longer than 128
+     *     characters.
      */
-    void setDisplayName(@NotNull String displayName);
+    void setDisplayName(@NotNull String displayName) throws IllegalStateException, IllegalArgumentException;
 
     /**
      * Gets the criteria this objective tracks.
@@ -46,7 +49,7 @@ public interface Objective {
      */
     @Deprecated
     @NotNull
-    String getCriteria();
+    String getCriteria() throws IllegalStateException;
 
     /**
      * Gets the criteria this objective tracks.
@@ -55,7 +58,7 @@ public interface Objective {
      * @throws IllegalStateException if this objective has been unregistered
      */
     @NotNull
-    Criteria getTrackedCriteria();
+    Criteria getTrackedCriteria() throws IllegalStateException;
 
     /**
      * Gets if the objective's scores can be modified directly by a plugin.
@@ -64,7 +67,7 @@ public interface Objective {
      * @throws IllegalStateException if this objective has been unregistered
      * @see Criterias#HEALTH
      */
-    boolean isModifiable();
+    boolean isModifiable() throws IllegalStateException;
 
     /**
      * Gets the scoreboard to which this objective is attached.
@@ -80,7 +83,7 @@ public interface Objective {
      *
      * @throws IllegalStateException if this objective has been unregistered
      */
-    void unregister();
+    void unregister() throws IllegalStateException;
 
     /**
      * Sets this objective to display on the specified slot for the
@@ -89,7 +92,7 @@ public interface Objective {
      * @param slot display slot to change, or null to not display
      * @throws IllegalStateException if this objective has been unregistered
      */
-    void setDisplaySlot(@Nullable DisplaySlot slot);
+    void setDisplaySlot(@Nullable DisplaySlot slot) throws IllegalStateException;
 
     /**
      * Gets the display slot this objective is displayed at.
@@ -98,7 +101,7 @@ public interface Objective {
      * @throws IllegalStateException if this objective has been unregistered
      */
     @Nullable
-    DisplaySlot getDisplaySlot();
+    DisplaySlot getDisplaySlot() throws IllegalStateException;
 
     /**
      * Sets manner in which this objective will be rendered.
@@ -106,7 +109,7 @@ public interface Objective {
      * @param renderType new render type
      * @throws IllegalStateException if this objective has been unregistered
      */
-    void setRenderType(@NotNull RenderType renderType);
+    void setRenderType(@NotNull RenderType renderType) throws IllegalStateException;
 
     /**
      * Sets manner in which this objective will be rendered.
@@ -115,29 +118,31 @@ public interface Objective {
      * @throws IllegalStateException if this objective has been unregistered
      */
     @NotNull
-    RenderType getRenderType();
+    RenderType getRenderType() throws IllegalStateException;
 
     /**
      * Gets a player's Score for an Objective on this Scoreboard
      *
      * @param player Player for the Score
      * @return Score tracking the Objective and player specified
+     * @throws IllegalArgumentException if player is null
      * @throws IllegalStateException if this objective has been unregistered
      * @see #getScore(String)
      * @deprecated Scoreboards can contain entries that aren't players
      */
     @Deprecated
     @NotNull
-    Score getScore(@NotNull OfflinePlayer player);
+    Score getScore(@NotNull OfflinePlayer player) throws IllegalArgumentException, IllegalStateException;
 
     /**
      * Gets an entry's Score for an Objective on this Scoreboard.
      *
      * @param entry Entry for the Score
      * @return Score tracking the Objective and entry specified
+     * @throws IllegalArgumentException if entry is null
      * @throws IllegalStateException if this objective has been unregistered
      * @throws IllegalArgumentException if entry is longer than 32767 characters.
      */
     @NotNull
-    Score getScore(@NotNull String entry);
+    Score getScore(@NotNull String entry) throws IllegalArgumentException, IllegalStateException;
 }

@@ -1,6 +1,8 @@
 package org.bukkit.entity;
 
 import com.google.common.base.Preconditions;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Location;
@@ -19,9 +21,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public enum EntityType implements Keyed, Translatable {
 
@@ -285,6 +284,12 @@ public enum EntityType implements Keyed, Translatable {
     ITEM_DISPLAY("item_display", ItemDisplay.class, -1),
     SNIFFER("sniffer", Sniffer.class, -1),
     TEXT_DISPLAY("text_display", TextDisplay.class, -1),
+    @MinecraftExperimental
+    @ApiStatus.Experimental
+    BREEZE("breeze", Breeze.class, -1),
+    @MinecraftExperimental
+    @ApiStatus.Experimental
+    WIND_CHARGE("wind_charge", WindCharge.class, -1),
     /**
      * A fishing line and bobber.
      */

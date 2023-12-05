@@ -230,6 +230,9 @@ public class ActivationRange
             return true;
         }
 
+        if ( entity instanceof ItemEntity) {
+            return true;
+        }
         boolean isActive = entity.bridge$activatedTick() >= BukkitExtraConstants.currentTick || entity.bridge$defaultActivationState();
         // Should this entity tick?
         if ( !isActive )

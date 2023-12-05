@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R2.util.CraftLocation;
+import org.bukkit.craftbukkit.v1_20_R3.util.CraftLocation;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.spongepowered.asm.mixin.Final;

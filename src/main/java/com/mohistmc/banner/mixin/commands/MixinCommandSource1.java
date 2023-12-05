@@ -3,7 +3,7 @@ package com.mohistmc.banner.mixin.commands;
 import com.mohistmc.banner.injection.commands.InjectionCommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_20_R2.command.ServerCommandSender;
+import org.bukkit.craftbukkit.v1_20_R3.command.ServerCommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 

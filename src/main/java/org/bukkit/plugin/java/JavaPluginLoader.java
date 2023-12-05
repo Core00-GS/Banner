@@ -3,6 +3,24 @@ package org.bukkit.plugin.java;
 import com.google.common.base.Preconditions;
 import com.mohistmc.banner.BannerMCStart;
 import com.mohistmc.banner.stackdeobf.mappings.RemappingUtil;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.regex.Pattern;
 import org.bukkit.Server;
 import org.bukkit.Warning;
 import org.bukkit.Warning.WarningState;
@@ -28,25 +46,6 @@ import org.bukkit.plugin.UnknownDependencyException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.error.YAMLException;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.regex.Pattern;
 
 /**
  * Represents a Java plugin loader, allowing plugins in the form of .jar
@@ -148,7 +147,6 @@ public final class JavaPluginLoader implements PluginLoader {
         } catch (InvalidPluginException ex) {
             throw ex;
         } catch (Throwable ex) {
-            RemappingUtil.remapStackTraceElements(ex.getStackTrace());
             throw new InvalidPluginException(ex);
         }
 

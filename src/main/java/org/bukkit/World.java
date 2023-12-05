@@ -1,5 +1,13 @@
 package org.bukkit;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -32,15 +40,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * Represents a world, which may contain entities, chunks and blocks
@@ -454,7 +453,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * @return ItemDrop entity created as a result of this method
      */
     @NotNull
-    public Item dropItem(@NotNull Location location, @NotNull ItemStack item, @Nullable Consumer<Item> function);
+    public Item dropItem(@NotNull Location location, @NotNull ItemStack item, @Nullable Consumer<? super Item> function);
 
     /**
      * Drops an item at the specified {@link Location} with a random offset
@@ -476,7 +475,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * @return ItemDrop entity created as a result of this method
      */
     @NotNull
-    public Item dropItemNaturally(@NotNull Location location, @NotNull ItemStack item, @Nullable Consumer<Item> function);
+    public Item dropItemNaturally(@NotNull Location location, @NotNull ItemStack item, @Nullable Consumer<? super Item> function);
 
     /**
      * Creates an {@link Arrow} entity at the given {@link Location}
@@ -598,6 +597,255 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
     @NotNull
     public Collection<Entity> getEntitiesByClasses(@NotNull Class<?>... classes);
 
+    // Paper start
+    /**
+     * Gets nearby LivingEntities within the specified radius (bounding box)
+     * @param loc Center location
+     * @param radius Radius
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<LivingEntity> getNearbyLivingEntities(@NotNull Location loc, double radius) {
+        return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, radius, radius, radius);
+    }
+
+    /**
+     * Gets nearby LivingEntities within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xzRadius X/Z Radius
+     * @param yRadius Y Radius
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<LivingEntity> getNearbyLivingEntities(@NotNull Location loc, double xzRadius, double yRadius) {
+        return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, xzRadius, yRadius, xzRadius);
+    }
+
+    /**
+     * Gets nearby LivingEntities within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z radius
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<LivingEntity> getNearbyLivingEntities(@NotNull Location loc, double xRadius, double yRadius, double zRadius) {
+        return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, xRadius, yRadius, zRadius);
+    }
+
+    /**
+     * Gets nearby LivingEntities within the specified radius (bounding box)
+     * @param loc Center location
+     * @param radius X Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of living entities near location. This will always be a non-null collection
+     */
+    @NotNull
+    public default Collection<LivingEntity> getNearbyLivingEntities(@NotNull Location loc, double radius, @Nullable Predicate<LivingEntity> predicate) {
+        return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, radius, radius, radius, predicate);
+    }
+
+    /**
+     * Gets nearby LivingEntities within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xzRadius X/Z Radius
+     * @param yRadius Y Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of living entities near location. This will always be a non-null collection
+     */
+    @NotNull
+    public default Collection<LivingEntity> getNearbyLivingEntities(@NotNull Location loc, double xzRadius, double yRadius, @Nullable Predicate<LivingEntity> predicate) {
+        return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, xzRadius, yRadius, xzRadius, predicate);
+    }
+
+    /**
+     * Gets nearby LivingEntities within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of living entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<LivingEntity> getNearbyLivingEntities(@NotNull Location loc, double xRadius, double yRadius, double zRadius, @Nullable Predicate<LivingEntity> predicate) {
+        return getNearbyEntitiesByType(org.bukkit.entity.LivingEntity.class, loc, xRadius, yRadius, zRadius, predicate);
+    }
+
+    /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param radius X/Y/Z Radius
+     * @return the collection of living entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<Player> getNearbyPlayers(@NotNull Location loc, double radius) {
+        return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, radius, radius, radius);
+    }
+
+    /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xzRadius X/Z Radius
+     * @param yRadius Y Radius
+     * @return the collection of living entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<Player> getNearbyPlayers(@NotNull Location loc, double xzRadius, double yRadius) {
+        return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, xzRadius, yRadius, xzRadius);
+    }
+
+    /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z Radius
+     * @return the collection of players near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<Player> getNearbyPlayers(@NotNull Location loc, double xRadius, double yRadius, double zRadius) {
+        return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, xRadius, yRadius, zRadius);
+    }
+
+    /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param radius X/Y/Z Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of players near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<Player> getNearbyPlayers(@NotNull Location loc, double radius, @Nullable Predicate<Player> predicate) {
+        return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, radius, radius, radius, predicate);
+    }
+
+    /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xzRadius X/Z Radius
+     * @param yRadius Y Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of players near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<Player> getNearbyPlayers(@NotNull Location loc, double xzRadius, double yRadius, @Nullable Predicate<Player> predicate) {
+        return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, xzRadius, yRadius, xzRadius, predicate);
+    }
+
+    /**
+     * Gets nearby players within the specified radius (bounding box)
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z Radius
+     * @param predicate a predicate used to filter results
+     * @return the collection of players near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default Collection<Player> getNearbyPlayers(@NotNull Location loc, double xRadius, double yRadius, double zRadius, @Nullable Predicate<Player> predicate) {
+        return getNearbyEntitiesByType(org.bukkit.entity.Player.class, loc, xRadius, yRadius, zRadius, predicate);
+    }
+
+    /**
+     * Gets all nearby entities of the specified type, within the specified radius (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param radius X/Y/Z radius to search within
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default <T extends Entity> Collection<T> getNearbyEntitiesByType(@Nullable Class<? extends T> clazz, @NotNull Location loc, double radius) {
+        return getNearbyEntitiesByType(clazz, loc, radius, radius, radius, null);
+    }
+
+    /**
+     * Gets all nearby entities of the specified type, within the specified radius, with x and x radius matching (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param xzRadius X/Z radius to search within
+     * @param yRadius Y radius to search within
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default <T extends Entity> Collection<T> getNearbyEntitiesByType(@Nullable Class<? extends T> clazz, @NotNull Location loc, double xzRadius, double yRadius) {
+        return getNearbyEntitiesByType(clazz, loc, xzRadius, yRadius, xzRadius, null);
+    }
+
+    /**
+     * Gets all nearby entities of the specified type, within the specified radius (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z Radius
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default <T extends Entity> Collection<T> getNearbyEntitiesByType(@Nullable Class<? extends T> clazz, @NotNull Location loc, double xRadius, double yRadius, double zRadius) {
+        return getNearbyEntitiesByType(clazz, loc, xRadius, yRadius, zRadius, null);
+    }
+
+    /**
+     * Gets all nearby entities of the specified type, within the specified radius (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param radius X/Y/Z radius to search within
+     * @param predicate a predicate used to filter results
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default <T extends Entity> Collection<T> getNearbyEntitiesByType(@Nullable Class<? extends T> clazz, @NotNull Location loc, double radius, @Nullable Predicate<T> predicate) {
+        return getNearbyEntitiesByType(clazz, loc, radius, radius, radius, predicate);
+    }
+
+    /**
+     * Gets all nearby entities of the specified type, within the specified radius, with x and x radius matching (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param xzRadius X/Z radius to search within
+     * @param yRadius Y radius to search within
+     * @param predicate a predicate used to filter results
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default <T extends Entity> Collection<T> getNearbyEntitiesByType(@Nullable Class<? extends T> clazz, @NotNull Location loc, double xzRadius, double yRadius, @Nullable Predicate<T> predicate) {
+        return getNearbyEntitiesByType(clazz, loc, xzRadius, yRadius, xzRadius, predicate);
+    }
+
+    /**
+     * Gets all nearby entities of the specified type, within the specified radius (bounding box)
+     * @param clazz Type to filter by
+     * @param loc Center location
+     * @param xRadius X Radius
+     * @param yRadius Y Radius
+     * @param zRadius Z Radius
+     * @param predicate a predicate used to filter results
+     * @param <T> the entity type
+     * @return the collection of entities near location. This will always be a non-null collection.
+     */
+    @NotNull
+    public default <T extends Entity> Collection<T> getNearbyEntitiesByType(@Nullable Class<? extends Entity> clazz, @NotNull Location loc, double xRadius, double yRadius, double zRadius, @Nullable Predicate<T> predicate) {
+        if (clazz == null) {
+            clazz = Entity.class;
+        }
+        List<T> nearby = new ArrayList<>();
+        for (Entity bukkitEntity : getNearbyEntities(loc, xRadius, yRadius, zRadius)) {
+            //noinspection unchecked
+            if (clazz.isAssignableFrom(bukkitEntity.getClass()) && (predicate == null || predicate.test((T) bukkitEntity))) {
+                //noinspection unchecked
+                nearby.add((T) bukkitEntity);
+            }
+        }
+        return nearby;
+    }
+
     /**
      * Get a list of all players in this World
      *
@@ -605,6 +853,17 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      */
     @NotNull
     public List<Player> getPlayers();
+
+    // Paper start - getEntity by UUID API
+    /**
+     * Gets an entity in this world by its UUID
+     *
+     * @param uuid the UUID of the entity
+     * @return the entity with the given UUID, or null if it isn't found
+     */
+    @Nullable
+    public Entity getEntity(@NotNull java.util.UUID uuid);
+    // Paper end
 
     /**
      * Returns a list of entities within a bounding box centered around a
@@ -642,7 +901,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      *     non-null collection.
      */
     @NotNull
-    public Collection<Entity> getNearbyEntities(@NotNull Location location, double x, double y, double z, @Nullable Predicate<Entity> filter);
+    public Collection<Entity> getNearbyEntities(@NotNull Location location, double x, double y, double z, @Nullable Predicate<? super Entity> filter);
 
     /**
      * Returns a list of entities within the given bounding box.
@@ -672,7 +931,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      *     be a non-null collection
      */
     @NotNull
-    public Collection<Entity> getNearbyEntities(@NotNull BoundingBox boundingBox, @Nullable Predicate<Entity> filter);
+    public Collection<Entity> getNearbyEntities(@NotNull BoundingBox boundingBox, @Nullable Predicate<? super Entity> filter);
 
     /**
      * Performs a ray trace that checks for entity collisions.
@@ -680,6 +939,9 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * This may not consider entities in currently unloaded chunks. Some
      * implementations may impose artificial restrictions on the maximum
      * distance.
+     * <p>
+     * <b>Note:</b> Due to display entities having a zero size hitbox, this method will not detect them.
+     * To detect display entities use {@link #rayTraceEntities(Location, Vector, double, double)} with a positive raySize
      *
      * @param start the start position
      * @param direction the ray direction
@@ -702,7 +964,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * @param direction the ray direction
      * @param maxDistance the maximum distance
      * @param raySize entity bounding boxes will be uniformly expanded (or
-     *     shrinked) by this value before doing collision checks
+     *     shrunk) by this value before doing collision checks
      * @return the closest ray trace hit result, or <code>null</code> if there
      *     is no hit
      * @see #rayTraceEntities(Location, Vector, double, double, Predicate)
@@ -716,6 +978,9 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * This may not consider entities in currently unloaded chunks. Some
      * implementations may impose artificial restrictions on the maximum
      * distance.
+     * <p>
+     * <b>Note:</b> Due to display entities having a zero size hitbox, this method will not detect them.
+     * To detect display entities use {@link #rayTraceEntities(Location, Vector, double, double, Predicate)} with a positive raySize
      *
      * @param start the start position
      * @param direction the ray direction
@@ -727,7 +992,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * @see #rayTraceEntities(Location, Vector, double, double, Predicate)
      */
     @Nullable
-    public RayTraceResult rayTraceEntities(@NotNull Location start, @NotNull Vector direction, double maxDistance, @Nullable Predicate<Entity> filter);
+    public RayTraceResult rayTraceEntities(@NotNull Location start, @NotNull Vector direction, double maxDistance, @Nullable Predicate<? super Entity> filter);
 
     /**
      * Performs a ray trace that checks for entity collisions.
@@ -740,14 +1005,14 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * @param direction the ray direction
      * @param maxDistance the maximum distance
      * @param raySize entity bounding boxes will be uniformly expanded (or
-     *     shrinked) by this value before doing collision checks
+     *     shrunk) by this value before doing collision checks
      * @param filter only entities that fulfill this predicate are considered,
      *     or <code>null</code> to consider all entities
      * @return the closest ray trace hit result, or <code>null</code> if there
      *     is no hit
      */
     @Nullable
-    public RayTraceResult rayTraceEntities(@NotNull Location start, @NotNull Vector direction, double maxDistance, double raySize, @Nullable Predicate<Entity> filter);
+    public RayTraceResult rayTraceEntities(@NotNull Location start, @NotNull Vector direction, double maxDistance, double raySize, @Nullable Predicate<? super Entity> filter);
 
     /**
      * Performs a ray trace that checks for block collisions using the blocks'
@@ -843,7 +1108,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      *     entity, or <code>null</code> if there is no hit
      */
     @Nullable
-    public RayTraceResult rayTrace(@NotNull Location start, @NotNull Vector direction, double maxDistance, @NotNull FluidCollisionMode fluidCollisionMode, boolean ignorePassableBlocks, double raySize, @Nullable Predicate<Entity> filter);
+    public RayTraceResult rayTrace(@NotNull Location start, @NotNull Vector direction, double maxDistance, @NotNull FluidCollisionMode fluidCollisionMode, boolean ignorePassableBlocks, double raySize, @Nullable Predicate<? super Entity> filter);
 
     /**
      * Gets the default spawn {@link Location} of this world
@@ -2104,6 +2369,18 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
     void setSpawnLimit(@NotNull SpawnCategory spawnCategory, int limit);
 
     /**
+     * Play a note at the provided Location in the World. <br>
+     * This <i>will</i> work with cake.
+     * <p>
+     * This method will fail silently when called with {@link Instrument#CUSTOM_HEAD}.
+     *
+     * @param loc The location to play the note
+     * @param instrument The instrument
+     * @param note The note
+     */
+    void playNote(@NotNull Location loc, @NotNull Instrument instrument, @NotNull Note note);
+
+    /**
      * Play a Sound at the provided Location in the World.
      * <p>
      * This function will fail silently if Location or Sound are null.
@@ -2141,6 +2418,37 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * @param pitch The pitch of the sound
      */
     void playSound(@NotNull Location location, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch);
+
+    /**
+     * Play a Sound at the provided Location in the World. For sounds with multiple
+     * variations passing the same seed will always play the same variation.
+     * <p>
+     * This function will fail silently if Location or Sound are null.
+     *
+     * @param location The location to play the sound
+     * @param sound The sound to play
+     * @param category the category of the sound
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     * @param seed The seed for the sound
+     */
+    void playSound(@NotNull Location location, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch, long seed);
+    /**
+     * Play a Sound at the provided Location in the World. For sounds with multiple
+     * variations passing the same seed will always play the same variation.
+     * <p>
+     * This function will fail silently if Location or Sound are null. No sound will
+     * be heard by the players if their clients do not have the respective sound for
+     * the value passed.
+     *
+     * @param location The location to play the sound
+     * @param sound The internal sound name to play
+     * @param category the category of the sound
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     * @param seed The seed for the sound
+     */
+    void playSound(@NotNull Location location, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch, long seed);
 
     /**
      * Play a Sound at the provided Location in the World.
@@ -2206,6 +2514,37 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      * @param pitch The pitch of the sound
      */
     void playSound(@NotNull Entity entity, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch);
+
+    /**
+     * Play a Sound at the location of the provided entity in the World. For sounds
+     * with multiple variations passing the same seed will always play the same
+     * variation.
+     * <p>
+     * This function will fail silently if Entity or Sound are null.
+     *
+     * @param entity The entity to play the sound
+     * @param sound The sound to play
+     * @param category The category of the sound
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     * @param seed The seed for the sound
+     */
+    void playSound(@NotNull Entity entity, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch, long seed);
+    /**
+     * Play a Sound at the location of the provided entity in the World. For sounds
+     * with multiple variations passing the same seed will always play the same
+     * variation.
+     * <p>
+     * This function will fail silently if Entity or Sound are null.
+     *
+     * @param entity The entity to play the sound
+     * @param sound The sound to play
+     * @param category The category of the sound
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     * @param seed The seed for the sound
+     */
+    void playSound(@NotNull Entity entity, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch, long seed);
 
     /**
      * Get an array containing the names of all the {@link GameRule}s.
@@ -2639,53 +2978,59 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
     @Nullable
     StructureSearchResult locateNearestStructure(@NotNull Location origin, @NotNull Structure structure, int radius, boolean findUnexplored);
 
-    // Spigot start
     /**
-     * Returns the view distance used for this world.
+     * Find the closest nearby location with a biome matching the provided
+     * {@link Biome}(s). Finding biomes can, and will, block if the world is looking
+     * in chunks that have not generated yet. This can lead to the world temporarily
+     * freezing while locating a biome.
+     * <p>
+     * <b>Note:</b> This will <i>not</i> reflect changes made to the world after
+     * generation, this method only sees the biome at the time of world generation.
+     * This will <i>not</i> load or generate chunks.
+     * <p>
+     * If multiple biomes are provided {@link BiomeSearchResult#getBiome()} will
+     * indicate which one was located.
+     * <p>
+     * This method will use a horizontal interval of 32 and a vertical interval of
+     * 64, equal to the /locate command.
      *
-     * @return the view distance used for this world
+     * @param origin where to start looking for a biome
+     * @param radius the radius, in blocks, around which to search
+     * @param biomes the biomes to search for
+     * @return a BiomeSearchResult containing the closest {@link Location} and
+     *         {@link Biome}, or null if no biome was found.
+     * @see #locateNearestBiome(Location, int, int, int, Biome...)
      */
-    int getViewDistance();
+    @Nullable
+    BiomeSearchResult locateNearestBiome(@NotNull Location origin, int radius, @NotNull Biome... biomes);
 
     /**
-     * Returns the simulation distance used for this world.
+     * Find the closest nearby location with a biome matching the provided
+     * {@link Biome}(s). Finding biomes can, and will, block if the world is looking
+     * in chunks that have not generated yet. This can lead to the world temporarily
+     * freezing while locating a biome.
+     * <p>
+     * <b>Note:</b> This will <i>not</i> reflect changes made to the world after
+     * generation, this method only sees the biome at the time of world generation.
+     * This will <i>not</i> load or generate chunks.
+     * <p>
+     * If multiple biomes are provided {@link BiomeSearchResult#getBiome()} will
+     * indicate which one was located. Higher values for {@code horizontalInterval}
+     * and {@code verticalInterval} will result in faster searches, but may lead to
+     * small biomes being missed.
      *
-     * @return the simulation distance used for this world
+     * @param origin             where to start looking for a biome
+     * @param radius             the radius, in blocks, around which to search
+     * @param horizontalInterval the horizontal distance between each check
+     * @param verticalInterval   the vertical distance between each check
+     * @param biomes             the biomes to search for
+     * @return a BiomeSearchResult containing the closest {@link Location} and
+     *         {@link Biome}, or null if no biome was found.
+     * @see #locateNearestBiome(Location, int, Biome...)
      */
-    int getSimulationDistance();
-    // Spigot end
+    @Nullable
+    BiomeSearchResult locateNearestBiome(@NotNull Location origin, int radius, int horizontalInterval, int verticalInterval, @NotNull Biome... biomes);
 
-    // Spigot start
-    public class Spigot {
-
-        /**
-         * Strikes lightning at the given {@link Location} and possibly without sound
-         *
-         * @param loc The location to strike lightning
-         * @param isSilent Whether this strike makes no sound
-         * @return The lightning entity.
-         */
-        @NotNull
-        public LightningStrike strikeLightning(@NotNull Location loc, boolean isSilent) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        /**
-         * Strikes lightning at the given {@link Location} without doing damage and possibly without sound
-         *
-         * @param loc The location to strike lightning
-         * @param isSilent Whether this strike makes no sound
-         * @return The lightning entity.
-         */
-        @NotNull
-        public LightningStrike strikeLightningEffect(@NotNull Location loc, boolean isSilent) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    }
-
-    @NotNull
-    Spigot spigot();
-    // Spigot end
 
     /**
      * Finds the nearest raid close to the given location.
@@ -2751,7 +3096,7 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
         CUSTOM(-999);
 
         private final int id;
-        private static final Map<Integer, Environment> lookup = new HashMap<Integer, Environment>();
+        private static final Map<Integer, Environment> lookup = new HashMap<>();
 
         private Environment(int id) {
             this.id = id;
@@ -2787,4 +3132,75 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
             }
         }
     }
+
+    // Spigot start
+    /**
+     * Returns the view distance used for this world.
+     *
+     * @return the view distance used for this world
+     */
+    int getViewDistance();
+
+    /**
+     * Returns the simulation distance used for this world.
+     *
+     * @return the simulation distance used for this world
+     */
+    int getSimulationDistance();
+
+    // Mohist start
+
+    /**
+     * Returns whether the current world was created by a plugin.
+     *
+     * @return whether the current world was created by a plugin
+     */
+    boolean isBukkit();
+    void setBukkit(boolean b);
+
+    /**
+     * Returns whether the current world was created by a mod.
+     *
+     * @return whether the current world was created by a mod
+     */
+    boolean isMods();
+
+    /**
+     * Returns the mod source for this world.
+     *
+     * @return the mod source for this world
+     */
+    String getModid();
+    // Mohist end
+
+    public class Spigot {
+
+        /**
+         * Strikes lightning at the given {@link Location} and possibly without sound
+         *
+         * @param loc The location to strike lightning
+         * @param isSilent Whether this strike makes no sound
+         * @return The lightning entity.
+         */
+        @NotNull
+        public LightningStrike strikeLightning(@NotNull Location loc, boolean isSilent) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        /**
+         * Strikes lightning at the given {@link Location} without doing damage and possibly without sound
+         *
+         * @param loc The location to strike lightning
+         * @param isSilent Whether this strike makes no sound
+         * @return The lightning entity.
+         */
+        @NotNull
+        public LightningStrike strikeLightningEffect(@NotNull Location loc, boolean isSilent) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+
+    @NotNull
+    Spigot spigot();
+    // Spigot end
 }

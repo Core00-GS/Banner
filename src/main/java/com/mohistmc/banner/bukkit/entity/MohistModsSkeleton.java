@@ -1,8 +1,8 @@
 package com.mohistmc.banner.bukkit.entity;
 
 import com.mohistmc.banner.api.EntityAPI;
-import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R2.entity.CraftAbstractSkeleton;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftAbstractSkeleton;
 import org.bukkit.entity.Skeleton;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,12 +1,11 @@
 package org.bukkit;
 
 import com.google.common.base.Preconditions;
+import java.util.Locale;
+import java.util.UUID;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Locale;
-import java.util.UUID;
 
 /**
  * Represents a String based key which consists of two components - a namespace
@@ -81,8 +80,11 @@ public final class NamespacedKey {
      */
     @Deprecated
     public NamespacedKey(@NotNull String namespace, @NotNull String key) {
+        // Mohsit TODO
+        /*
         Preconditions.checkArgument(namespace != null && isValidNamespace(namespace), "Invalid namespace. Must be [a-z0-9._-]: %s", namespace);
         Preconditions.checkArgument(key != null && isValidKey(key), "Invalid key. Must be [a-z0-9/._-]: %s", key);
+         */
 
         this.namespace = namespace;
         this.key = key;

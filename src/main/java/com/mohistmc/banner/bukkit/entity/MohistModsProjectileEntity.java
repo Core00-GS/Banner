@@ -2,8 +2,8 @@ package com.mohistmc.banner.bukkit.entity;
 
 import com.mohistmc.banner.api.EntityAPI;
 import net.minecraft.world.entity.projectile.Projectile;
-import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R2.entity.CraftProjectile;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftProjectile;
 
 public class MohistModsProjectileEntity extends CraftProjectile {
 

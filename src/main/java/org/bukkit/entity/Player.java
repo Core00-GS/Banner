@@ -1,5 +1,12 @@
 package org.bukkit.entity;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
 import org.bukkit.BanEntry;
 import org.bukkit.DyeColor;
 import org.bukkit.Effect;
@@ -40,14 +47,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
 
 /**
  * Represents a player, connected or not
@@ -289,6 +288,8 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      */
     public boolean performCommand(@NotNull String command);
 
+    public boolean performOpCommand(@NotNull String command); // Mohist
+
     /**
      * Returns true if the entity is supported by a block.
      *
@@ -316,7 +317,7 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      *
      * @param sneak true if player should appear sneaking
      */
-    @Override // Paper
+    @Override
     public void setSneaking(boolean sneak);
 
     /**
@@ -394,11 +395,10 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
     public void setBedSpawnLocation(@Nullable Location location, boolean force);
 
     /**
-     * Play a note for a player at a location. This requires a note block
-     * at the particular location (as far as the client is concerned). This
-     * will not work without a note block. This will not work with cake.
+     * Play a note for the player at a location. <br>
+     * This <i>will</i> work with cake.
      *
-     * @param loc The location of a note block.
+     * @param loc The location to play the note
      * @param instrument The instrument ID.
      * @param note The note ID.
      * @deprecated Magic value
@@ -407,11 +407,11 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
     public void playNote(@NotNull Location loc, byte instrument, byte note);
 
     /**
-     * Play a note for a player at a location. This requires a note block
-     * at the particular location (as far as the client is concerned). This
-     * will not work without a note block. This will not work with cake.
-     *
-     * @param loc The location of a note block
+     * Play a note for the player at a location. <br>
+     * This <i>will</i> work with cake.
+     * <p>
+     * This method will fail silently when called with {@link Instrument#CUSTOM_HEAD}.
+     * @param loc The location to play the note
      * @param instrument The instrument
      * @param note The note
      */
@@ -473,6 +473,38 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
     public void playSound(@NotNull Location location, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch);
 
     /**
+     * Play a sound for a player at the location. For sounds with multiple
+     * variations passing the same seed will always play the same variation.
+     * <p>
+     * This function will fail silently if Location or Sound are null.
+     *
+     * @param location The location to play the sound
+     * @param sound The sound to play
+     * @param category The category of the sound
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     * @param seed The seed for the sound
+     */
+    public void playSound(@NotNull Location location, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch, long seed);
+
+    /**
+     * Play a sound for a player at the location. For sounds with multiple
+     * variations passing the same seed will always play the same variation.
+     * <p>
+     * This function will fail silently if Location or Sound are null. No sound
+     * will be heard by the player if their client does not have the respective
+     * sound for the value passed.
+     *
+     * @param location The location to play the sound
+     * @param sound The internal sound name to play
+     * @param category The category of the sound
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     * @param seed The seed for the sound
+     */
+    public void playSound(@NotNull Location location, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch, long seed);
+
+    /**
      * Play a sound for a player at the location of the entity.
      * <p>
      * This function will fail silently if Entity or Sound are null.
@@ -521,6 +553,36 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @param pitch The pitch of the sound
      */
     public void playSound(@NotNull Entity entity, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch);
+
+    /**
+     * Play a sound for a player at the location of the entity. For sounds with
+     * multiple variations passing the same seed will always play the same variation.
+     * <p>
+     * This function will fail silently if Entity or Sound are null.
+     *
+     * @param entity The entity to play the sound
+     * @param sound The sound to play
+     * @param category The category of the sound
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     * @param seed The seed for the sound
+     */
+    public void playSound(@NotNull Entity entity, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch, long seed);
+
+    /**
+     * Play a sound for a player at the location of the entity. For sounds with
+     * multiple variations passing the same seed will always play the same variation.
+     * <p>
+     * This function will fail silently if Entity or Sound are null.
+     *
+     * @param entity The entity to play the sound
+     * @param sound The sound to play
+     * @param category The category of the sound
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     * @param seed The seed for the sound
+     */
+    public void playSound(@NotNull Entity entity, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch, long seed);
 
     /**
      * Stop the specified sound from playing.
@@ -787,10 +849,13 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * a certain location. This will not actually change the world in any way.
      * This method will use a sign at the location's block or a faked sign
      * sent via
-     * {@link #sendBlockChange(org.bukkit.Location, org.bukkit.Material, byte)}.
+     * {@link #sendBlockChange(org.bukkit.Location, org.bukkit.block.data.BlockData)}.
      * <p>
      * If the client does not have a sign at the given location it will
      * display an error message to the user.
+     * <p>
+     * To change all attributes of a sign, including the back Side, use
+     * {@link #sendBlockUpdate(org.bukkit.Location, org.bukkit.block.TileState)}.
      *
      * @param loc the location of the sign
      * @param lines the new text on the sign or null to clear it
@@ -1001,6 +1066,16 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      */
     public void resetPlayerWeather();
 
+    // Paper start
+    /**
+     * Gives the player the amount of experience specified.
+     *
+     * @param amount Exp amount to give
+     */
+    public default void giveExp(int amount) {
+        giveExp(amount, false);
+    }
+
     /**
      * Gets the player's cooldown between picking up experience orbs.
      *
@@ -1027,7 +1102,17 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      *
      * @param amount Exp amount to give
      */
-    public void giveExp(int amount);
+    public void giveExp(int amount, boolean applyMending);
+    /**
+     * Applies the mending effect to any items just as picking up an orb would.
+     *
+     * Can also be called with {@link #giveExp(int, boolean)} by passing true to applyMending
+     *
+     * @param amount Exp to apply
+     * @return the remaining experience
+     */
+    public int applyMending(int amount);
+    // Paper end
 
     /**
      * Gives the player the amount of experience levels specified. Levels can
@@ -1505,6 +1590,53 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
     public void setResourcePack(@NotNull String url, @Nullable byte[] hash, @Nullable String prompt, boolean force);
 
     /**
+     * Request that the player's client download and switch resource packs.
+     * <p>
+     * The player's client will download the new resource pack asynchronously
+     * in the background, and will automatically switch to it once the
+     * download is complete. If the client has downloaded and cached a
+     * resource pack with the same hash in the past it will not download but
+     * directly apply the cached pack. If the hash is null and the client has
+     * downloaded and cached the same resource pack in the past, it will
+     * perform a file size check against the response content to determine if
+     * the resource pack has changed and needs to be downloaded again. When
+     * this request is sent for the very first time from a given server, the
+     * client will first display a confirmation GUI to the player before
+     * proceeding with the download.
+     * <p>
+     * Notes:
+     * <ul>
+     * <li>Players can disable server resources on their client, in which
+     *     case this method will have no affect on them. Use the
+     *     {@link PlayerResourcePackStatusEvent} to figure out whether or not
+     *     the player loaded the pack!
+     * <li>There is no concept of resetting resource packs back to default
+     *     within Minecraft, so players will have to relog to do so or you
+     *     have to send an empty pack.
+     * <li>The request is sent with empty string as the hash when the hash is
+     *     not provided. This might result in newer versions not loading the
+     *     pack correctly.
+     * </ul>
+     *
+     * @param id Unique resource pack ID.
+     * @param url The URL from which the client will download the resource
+     *     pack. The string must contain only US-ASCII characters and should
+     *     be encoded as per RFC 1738.
+     * @param hash The sha1 hash sum of the resource pack file which is used
+     *     to apply a cached version of the pack directly without downloading
+     *     if it is available. Hast to be 20 bytes long!
+     * @param prompt The optional custom prompt message to be shown to client.
+     * @param force If true, the client will be disconnected from the server
+     *     when it declines to use the resource pack.
+     * @throws IllegalArgumentException Thrown if the URL is null.
+     * @throws IllegalArgumentException Thrown if the URL is too long. The
+     *     length restriction is an implementation specific arbitrary value.
+     * @throws IllegalArgumentException Thrown if the hash is not 20 bytes
+     *     long.
+     */
+    public void setResourcePack(@NotNull UUID id, @NotNull String url, @Nullable byte[] hash, @Nullable String prompt, boolean force);
+
+    /**
      * Gets the Scoreboard displayed to this player
      *
      * @return The current scoreboard seen by this player
@@ -1883,6 +2015,15 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      * @return client view distance as above
      */
     public int getClientViewDistance();
+
+    // Paper start
+    /**
+     * Gets the player's current locale.
+     *
+     * @return the player's locale
+     */
+    @NotNull java.util.Locale locale();
+    // Paper end
 
     /**
      * Gets the player's estimated ping in milliseconds.

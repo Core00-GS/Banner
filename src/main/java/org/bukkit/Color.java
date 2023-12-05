@@ -2,14 +2,13 @@ package org.bukkit;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * A container for a color palette. This class is immutable; the set methods
@@ -207,6 +206,7 @@ public final class Color implements ConfigurationSerializable {
         Preconditions.checkArgument(blue >= 0 && blue <= BIT_MASK, "Blue[%s] is not between 0-255", blue);
 
         this.alpha = (byte) alpha;
+
         this.red = (byte) red;
         this.green = (byte) green;
         this.blue = (byte) blue;

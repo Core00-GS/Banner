@@ -2,8 +2,8 @@ package com.mohistmc.banner.bukkit.entity;
 
 import com.mohistmc.banner.api.EntityAPI;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R2.entity.CraftMinecart;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftMinecart;
 
 public class MohistModsMinecraft extends CraftMinecart {
 

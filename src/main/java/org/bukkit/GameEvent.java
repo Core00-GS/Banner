@@ -2,11 +2,10 @@ package org.bukkit;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Collection;
 import java.util.Collections;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a generic Mojang game event.
@@ -95,6 +94,7 @@ public abstract class GameEvent implements Keyed {
     public static final GameEvent STEP = getEvent("step");
     public static final GameEvent SWIM = getEvent("swim");
     public static final GameEvent TELEPORT = getEvent("teleport");
+    public static final GameEvent UNEQUIP = getEvent("unequip");
     @Deprecated
     public static final GameEvent WOLF_SHAKING = getEvent("entity_action");
     public static final GameEvent RESONATE_1 = getEvent("resonate_1");

@@ -56,11 +56,11 @@ public interface InjectionLivingEntity extends InjectionEntity {
     default void banner$setDrops(ArrayList<org.bukkit.inventory.ItemStack> drops) {
     }
 
-    default org.bukkit.craftbukkit.v1_20_R2.attribute.CraftAttributeMap bridge$craftAttributes() {
+    default org.bukkit.craftbukkit.v1_20_R3.attribute.CraftAttributeMap bridge$craftAttributes() {
         return null;
     }
 
-    default void banner$setCraftAttributes(org.bukkit.craftbukkit.v1_20_R2.attribute.CraftAttributeMap craftAttributes) {
+    default void banner$setCraftAttributes(org.bukkit.craftbukkit.v1_20_R3.attribute.CraftAttributeMap craftAttributes) {
     }
 
     default boolean bridge$collides() {

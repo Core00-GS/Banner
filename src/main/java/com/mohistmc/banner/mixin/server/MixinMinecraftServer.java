@@ -67,8 +67,8 @@ import net.minecraft.world.level.storage.WorldData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.craftbukkit.Main;
-import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R2.scoreboard.CraftScoreboardManager;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R3.scoreboard.CraftScoreboardManager;
 import org.bukkit.event.server.ServerLoadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.event.world.WorldLoadEvent;
@@ -114,7 +114,6 @@ public abstract class MixinMinecraftServer extends ReentrantBlockableEventLoop<T
 
     @Shadow public Map<ResourceKey<net.minecraft.world.level.Level>, ServerLevel> levels;
     @Shadow @Final public static org.slf4j.Logger LOGGER;
-    @Shadow private long nextTickTime;
     @Shadow public abstract boolean isSpawningMonsters();
     @Shadow public abstract boolean isSpawningAnimals();
     @Shadow private int tickCount;
@@ -226,7 +225,7 @@ public abstract class MixinMinecraftServer extends ReentrantBlockableEventLoop<T
 
     // CraftBukkit start
     public WorldLoader.DataLoadContext worldLoader;
-    public org.bukkit.craftbukkit.v1_20_R2.CraftServer server;
+    public org.bukkit.craftbukkit.v1_20_R3.CraftServer server;
     public OptionSet options;
     public org.bukkit.command.ConsoleCommandSender console;
     public ConsoleReader reader;

@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.players.StoredUserList;
 import net.minecraft.server.players.UserWhiteList;
 import net.minecraft.server.players.UserWhiteListEntry;
-import org.bukkit.craftbukkit.v1_20_R2.profile.CraftPlayerProfile;
+import org.bukkit.craftbukkit.v1_20_R3.profile.CraftPlayerProfile;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.io.File;

@@ -4,7 +4,7 @@ import com.mohistmc.banner.stackdeobf.mappings.RemappedThrowable;
 import com.mohistmc.banner.stackdeobf.mappings.RemappingUtil;
 import net.minecraft.CrashReport;
 import net.minecraft.SystemReport;
-import org.bukkit.craftbukkit.v1_20_R2.CraftCrashReport;
+import org.bukkit.craftbukkit.v1_20_R3.CraftCrashReport;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

@@ -1,16 +1,21 @@
 package org.bukkit.inventory.meta.trim;
 
 import com.google.common.base.Preconditions;
-import org.bukkit.inventory.meta.ArmorMeta;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
+import org.bukkit.MinecraftExperimental;
+import org.bukkit.inventory.meta.ArmorMeta;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an armor trim that may be applied to an item.
  *
  * @see ArmorMeta#setTrim(ArmorTrim)
+ * @apiNote Armor trims are part of an experimental feature of Minecraft and
+ * hence subject to change.
  */
+@MinecraftExperimental
+@ApiStatus.Experimental
 public class ArmorTrim {
 
     private final TrimMaterial material;

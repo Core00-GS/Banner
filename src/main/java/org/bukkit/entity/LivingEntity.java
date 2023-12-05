@@ -1,5 +1,9 @@
 package org.bukkit.entity;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,11 +21,6 @@ import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * Represents a living entity, such as a monster or player
@@ -83,6 +82,26 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
      */
     @NotNull
     public Block getTargetBlock(@Nullable Set<Material> transparent, int maxDistance);
+
+    /**
+     * Gets information about the entity being targeted
+     *
+     * @param maxDistance this is the maximum distance to scan
+     * @return entity being targeted, or null if no entity is targeted
+     */
+    @Nullable
+    public default Entity getTargetEntity(int maxDistance) {
+        return getTargetEntity(maxDistance, false);
+    }
+    /**
+     * Gets information about the entity being targeted
+     *
+     * @param maxDistance this is the maximum distance to scan
+     * @param ignoreBlocks true to scan through blocks
+     * @return entity being targeted, or null if no entity is targeted
+     */
+    @Nullable
+    public Entity getTargetEntity(int maxDistance, boolean ignoreBlocks);
 
     /**
      * Gets the last two blocks along the living entity's line of sight.

@@ -2,7 +2,7 @@ package com.mohistmc.banner.injection.world;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.bukkit.craftbukkit.v1_20_R2.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftHumanEntity;
 import org.bukkit.inventory.InventoryView;
 
 import java.util.Collections;

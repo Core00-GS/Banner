@@ -4,7 +4,7 @@ import com.mohistmc.banner.injection.world.level.block.InjectionSculkSpreader;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SculkSpreader;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_20_R2.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_20_R3.block.CraftBlock;
 import org.bukkit.event.block.SculkBloomEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

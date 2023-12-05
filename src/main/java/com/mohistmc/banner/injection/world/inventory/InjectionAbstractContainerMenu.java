@@ -21,7 +21,7 @@ public interface InjectionAbstractContainerMenu {
 
     }
 
-    default void transferTo(AbstractContainerMenu other, org.bukkit.craftbukkit.v1_20_R2.entity.CraftHumanEntity player) {
+    default void transferTo(AbstractContainerMenu other, org.bukkit.craftbukkit.v1_20_R3.entity.CraftHumanEntity player) {
     }
 
     default Component getTitle() {

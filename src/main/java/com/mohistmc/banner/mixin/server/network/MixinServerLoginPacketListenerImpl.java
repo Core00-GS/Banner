@@ -1,7 +1,6 @@
 package com.mohistmc.banner.mixin.server.network;
 
 import com.mohistmc.banner.config.BannerConfig;
-import com.mohistmc.banner.injection.server.network.InjectionServerCommonPacketListenerImpl;
 import com.mohistmc.banner.injection.server.network.InjectionServerLoginPacketListenerImpl;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.DefaultUncaughtExceptionHandler;
@@ -24,8 +23,8 @@ import net.minecraft.util.Crypt;
 import net.minecraft.util.CryptException;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R2.util.Waitable;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R3.util.Waitable;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 import org.jetbrains.annotations.Nullable;

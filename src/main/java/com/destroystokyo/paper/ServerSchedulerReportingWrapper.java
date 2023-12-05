@@ -3,7 +3,7 @@ package com.destroystokyo.paper;
 import com.destroystokyo.paper.event.server.ServerExceptionEvent;
 import com.destroystokyo.paper.exception.ServerSchedulerException;
 import com.google.common.base.Preconditions;
-import org.bukkit.craftbukkit.v1_20_R2.scheduler.CraftTask;
+import org.bukkit.craftbukkit.v1_20_R3.scheduler.CraftTask;
 
 /**
  * Reporting wrapper to catch exceptions not natively

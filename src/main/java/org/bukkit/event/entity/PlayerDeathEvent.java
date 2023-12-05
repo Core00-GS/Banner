@@ -1,11 +1,10 @@
 package org.bukkit.event.entity;
 
+import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * Thrown whenever a {@link Player} dies
@@ -38,6 +37,18 @@ public class PlayerDeathEvent extends EntityDeathEvent {
     @Override
     public Player getEntity() {
         return (Player) entity;
+    }
+
+    // Paper start
+    /**
+     * Clarity method for getting the player. Not really needed except
+     * for reasons of clarity.
+     *
+     * @return Player who is involved in this event
+     */
+    @NotNull
+    public Player getPlayer() {
+        return getEntity();
     }
 
     /**
@@ -165,5 +176,12 @@ public class PlayerDeathEvent extends EntityDeathEvent {
      */
     public boolean getKeepInventory() {
         return keepInventory;
+    }
+
+    private List<ItemStack> itemsToKeep = new java.util.ArrayList<>();
+
+    @NotNull
+    public List<ItemStack> getItemsToKeep() {
+        return itemsToKeep;
     }
 }

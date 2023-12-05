@@ -12,7 +12,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.bukkit.TreeType;
 import org.bukkit.block.BlockState;
-import org.bukkit.craftbukkit.v1_20_R2.event.CraftPortalEvent;
+import org.bukkit.craftbukkit.v1_20_R3.event.CraftPortalEvent;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 
