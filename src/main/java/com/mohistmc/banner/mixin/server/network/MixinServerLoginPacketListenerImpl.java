@@ -21,6 +21,7 @@ import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.Crypt;
 import net.minecraft.util.CryptException;
+import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
@@ -132,7 +133,7 @@ public abstract class MixinServerLoginPacketListenerImpl implements ServerLoginP
      */
     public void handleHello(ServerboundHelloPacket packet) {
         Validate.validState(this.state == ServerLoginPacketListenerImpl.State.HELLO, "Unexpected hello packet", new Object[0]);
-        // Validate.validState(isValidUsername(packet.name()), "Invalid characters in username", new Object[0]); // Mohist Chinese and other special characters are allowed
+        Validate.validState(Player.isValidUsername(packet.name()), "Invalid characters in username", new Object[0]); // Mohist Chinese and other special characters are allowed
         this.requestedUsername = packet.name();
         GameProfile gameProfile = this.server.getSingleplayerProfile();
         if (gameProfile != null && packet.name().equalsIgnoreCase(gameProfile.getName())) {

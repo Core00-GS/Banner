@@ -13,6 +13,7 @@ public class PlayerResourcePackStatusEvent extends PlayerEvent {
     private static final HandlerList handlers = new HandlerList();
     private final Status status;
 
+    // Banner TODO fix me
     public PlayerResourcePackStatusEvent(@NotNull final Player who, @NotNull Status resourcePackStatus) {
         super(who);
         this.status = resourcePackStatus;

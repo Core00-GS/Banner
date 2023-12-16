@@ -1,5 +1,7 @@
 package com.mohistmc.banner.mixin.server.network;
 
+import com.mohistmc.banner.BannerMCStart;
+import com.mohistmc.banner.BannerServer;
 import com.mohistmc.banner.bukkit.BukkitExtraConstants;
 import com.mohistmc.banner.bukkit.BukkitSnapshotCaptures;
 import com.mohistmc.banner.injection.server.network.InjectionServerCommonPacketListenerImpl;
@@ -148,6 +150,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 @Mixin(ServerGamePacketListenerImpl.class)
@@ -219,6 +222,9 @@ public abstract class MixinServerGamePacketListenerImpl extends ServerCommonPack
 
     @Shadow public abstract ServerPlayer getPlayer();
     @Shadow private boolean waitingForSwitchToConfig;
+
+    @Shadow protected abstract Optional<LastSeenMessages> tryHandleChat(LastSeenMessages.Update update);
+
     private int allowedPlayerTicks;
     private int dropCount = 0;
     private int lastTick;
@@ -551,39 +557,41 @@ public abstract class MixinServerGamePacketListenerImpl extends ServerCommonPack
                             }
 
                         } else {
-                            ++this.receivedMovePacketCount;
-                            int i = this.receivedMovePacketCount - this.knownMovePacketCount;
+                            if (worldserver.tickRateManager().runsNormally()) {
+                                ++this.receivedMovePacketCount;
+                                int i = this.receivedMovePacketCount - this.knownMovePacketCount;
 
-                            // CraftBukkit start - handle custom speeds and skipped ticks
-                            this.allowedPlayerTicks += (System.currentTimeMillis() / 50) - this.lastTick;
-                            this.allowedPlayerTicks = Math.max(this.allowedPlayerTicks, 1);
-                            this.lastTick = (int) (System.currentTimeMillis() / 50);
+                                // CraftBukkit start - handle custom speeds and skipped ticks
+                                this.allowedPlayerTicks += (System.currentTimeMillis() / 50) - this.lastTick;
+                                this.allowedPlayerTicks = Math.max(this.allowedPlayerTicks, 1);
+                                this.lastTick = (int) (System.currentTimeMillis() / 50);
 
-                            if (i > Math.max(this.allowedPlayerTicks, 5)) {
-                                LOGGER.debug("{} is sending move packets too frequently ({} packets since last tick)", this.player.getName().getString(), i);
-                                i = 1;
-                            }
+                                if (i > Math.max(this.allowedPlayerTicks, 5)) {
+                                    LOGGER.debug("{} is sending move packets too frequently ({} packets since last tick)", this.player.getName().getString(), i);
+                                    i = 1;
+                                }
 
-                            if (packetplayinflying.hasRot || d10 > 0) {
-                                allowedPlayerTicks -= 1;
-                            } else {
-                                allowedPlayerTicks = 20;
-                            }
-                            double speed;
-                            if (player.getAbilities().flying) {
-                                speed = player.getAbilities().flyingSpeed * 20f;
-                            } else {
-                                speed = player.getAbilities().walkingSpeed * 10f;
-                            }
+                                if (packetplayinflying.hasRot || d10 > 0) {
+                                    allowedPlayerTicks -= 1;
+                                } else {
+                                    allowedPlayerTicks = 20;
+                                }
+                                double speed;
+                                if (player.getAbilities().flying) {
+                                    speed = player.getAbilities().flyingSpeed * 20f;
+                                } else {
+                                    speed = player.getAbilities().walkingSpeed * 10f;
+                                }
 
-                            if (!this.player.isChangingDimension() && (!this.player.level().getGameRules().getBoolean(GameRules.RULE_DISABLE_ELYTRA_MOVEMENT_CHECK) || !this.player.isFallFlying())) {
-                                float f2 = this.player.isFallFlying() ? 300.0F : 100.0F;
+                                if (!this.player.isChangingDimension() && (!this.player.serverLevel().getGameRules().getBoolean(GameRules.RULE_DISABLE_ELYTRA_MOVEMENT_CHECK) || !this.player.isFallFlying())) {
+                                    float f2 = this.player.isFallFlying() ? 300.0F : 100.0F;
 
-                                if (d10 - d9 > Math.max(f2, Math.pow((double) (10.0F * (float) i * speed), 2)) && !this.isSingleplayerOwner()) {
-                                    // CraftBukkit end
-                                    LOGGER.warn("{} moved too quickly! {},{},{}", new Object[]{this.player.getName().getString(), d6, d7, d8});
-                                    this.teleport(this.player.getX(), this.player.getY(), this.player.getZ(), this.player.getYRot(), this.player.getXRot());
-                                    return;
+                                    if (d10 - d9 > Math.max(f2, Math.pow((double) (org.spigotmc.SpigotConfig.movedTooQuicklyMultiplier * (float) i * speed), 2)) && !this.isSingleplayerOwner()) {
+                                        // CraftBukkit end
+                                        LOGGER.warn("{} moved too quickly! {},{},{}", this.player.getName().getString(), d7, d8, d9);
+                                        this.teleport(this.player.getX(), this.player.getY(), this.player.getZ(), this.player.getYRot(), this.player.getXRot());
+                                        return;
+                                    }
                                 }
                             }
 
@@ -982,28 +990,24 @@ public abstract class MixinServerGamePacketListenerImpl extends ServerCommonPack
         if (isChatMessageIllegal(packet.message())) {
             this.disconnect(Component.translatable("multiplayer.disconnect.illegal_characters"));
         } else {
-            Optional<LastSeenMessages> optional = this.tryHandleChat(packet.message(), packet.timeStamp(), packet.lastSeenMessages());
+            Optional<LastSeenMessages> optional = this.tryHandleChat(packet.lastSeenMessages());
             if (optional.isPresent()) {
                 // this.server.submit(() -> { // CraftBukkit - async chat
-                    PlayerChatMessage playerChatMessage;
-                    try {
-                        playerChatMessage = this.getSignedMessage(packet, (LastSeenMessages)optional.get());
-                    } catch (SignedMessageChain.DecodeException var6) {
-                        this.handleMessageDecodeFailure(var6);
-                        return;
-                    }
+                PlayerChatMessage playerChatMessage;
+                try {
+                    playerChatMessage = this.getSignedMessage(packet, (LastSeenMessages) optional.get());
+                } catch (SignedMessageChain.DecodeException var6) {
+                    this.handleMessageDecodeFailure(var6);
+                    return;
+                }
 
-                    CompletableFuture<FilteredText> completableFuture = this.filterTextPacket(playerChatMessage.signedContent());
-                    Component component = this.server.getChatDecorator().decorate(this.player, playerChatMessage.decoratedContent());
-                    this.chatMessageChain.append((executor) -> {
-                        return completableFuture.thenAcceptAsync((filteredText) -> {
-                            PlayerChatMessage playerChatMessage2 = playerChatMessage.withUnsignedContent(component).filter(filteredText.mask());
-                            this.broadcastChatMessage(playerChatMessage2); // CraftBukkit - async chat
-                        }, server.bridge$chatExecutor());
-                    });
-                // }); // CraftBukkit - async chat
+                CompletableFuture<FilteredText> completablefuture = this.filterTextPacket(playerChatMessage.signedContent()).thenApplyAsync(Function.identity(), this.server.bridge$chatExecutor());
+                Component component = this.server.getChatDecorator().decorate(this.player, playerChatMessage.decoratedContent());
+                this.chatMessageChain.append(completablefuture, (text) -> {
+                    PlayerChatMessage playerChatMessage2 = playerChatMessage.withUnsignedContent(component).filter(completablefuture.join().mask());
+                    this.broadcastChatMessage(playerChatMessage2); // CraftBukkit - async chat
+                });
             }
-
         }
     }
 
@@ -1042,7 +1046,7 @@ public abstract class MixinServerGamePacketListenerImpl extends ServerCommonPack
     }
 
     @Inject(method = "tryHandleChat", cancellable = true, at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;unpackAndApplyLastSeen(Lnet/minecraft/network/chat/LastSeenMessages$Update;)Ljava/util/Optional;"))
-    private void banner$deadMenTellNoTales(String message, Instant timestamp, LastSeenMessages.Update update, CallbackInfoReturnable<Optional<LastSeenMessages>> cir) {
+    private void banner$deadMenTellNoTales(LastSeenMessages.Update update, CallbackInfoReturnable<Optional<LastSeenMessages>> cir) {
         if (this.player.isRemoved()) {
             this.send(new ClientboundSystemChatPacket(Component.translatable("chat.disabled.options").withStyle(ChatFormatting.RED), false));
             cir.setReturnValue(Optional.empty());

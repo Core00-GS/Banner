@@ -220,6 +220,6 @@ public abstract class MixinServerCommonPacketListenerImpl implements InjectionSe
 
     @Inject(method = "handleResourcePackResponse", at = @At("RETURN"))
     private void banner$handleResourcePackStatus(ServerboundResourcePackPacket packetIn, CallbackInfo ci) {
-        this.cserver.getPluginManager().callEvent(new PlayerResourcePackStatusEvent(this.getCraftPlayer(), PlayerResourcePackStatusEvent.Status.values()[packetIn.getAction().ordinal()]));
+        this.cserver.getPluginManager().callEvent(new PlayerResourcePackStatusEvent(this.getCraftPlayer(), PlayerResourcePackStatusEvent.Status.values()[packetIn.action().ordinal()]));
     }
 }

@@ -21,7 +21,8 @@ public class MixinServerLevel_EntityCallbacks {
 
     @Inject(method = "onTrackingStart(Lnet/minecraft/world/entity/Entity;)V", at = @At("RETURN"))
     private void banner$valid(Entity entity, CallbackInfo ci) {
-         entity.banner$setValid(true);
+        // Banner - TODO fix me
+        entity.banner$setValid(true);
         // Paper start - Set origin location when the entity is being added to the world
         if (entity.getOriginVector() == null) {
             entity.setOrigin(entity.getBukkitEntity().getLocation());
